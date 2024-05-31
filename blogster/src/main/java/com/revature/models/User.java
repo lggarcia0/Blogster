@@ -27,6 +27,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false, unique = true)
+    private String password;
+
     // A user can make many comments
     @OneToMany(mappedBy = "user")
     private Set<Comment> comments;
