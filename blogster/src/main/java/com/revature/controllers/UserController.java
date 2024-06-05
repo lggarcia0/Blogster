@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import com.revature.exceptions.AccountCreationException;
 import org.springframework.http.HttpStatus;
 
+import static org.springframework.http.HttpStatus.OK;
+
 
 @RestController
 @RequestMapping("users")
 @CrossOrigin(origins = "http://localhost:3000",
-        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.PATCH},
-        allowCredentials = "true")
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.PATCH}, allowCredentials = "true")
 public class UserController {
     private final UserService userService;
 
@@ -24,6 +25,17 @@ public class UserController {
         this.userService = userService;
     }
 
+    // User can update password and/or email
+//    @PostMapping("/{userId}/update")
+//    public ResponseEntity<?> updateUser(@RequestBody User modifiedUser, @PathVariable int userId) {
+//        try {
+//            userService.updateUser(modifiedUser, userId);
+//            return ResponseEntity.status(200).body("User Successfully Updated");
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
+  
     @PostMapping
     public ResponseEntity<User> registerNewUserHandler(@RequestBody User newUser) {
         if (newUser == null || newUser.getEmail() == null || newUser.getEmail().isEmpty()
@@ -37,7 +49,7 @@ public class UserController {
 
     @PostMapping("login")
     public ResponseEntity<User> loginHandler(@RequestBody User loginAttempt) {
-        return new ResponseEntity<User>(userService.loginUser(loginAttempt), HttpStatus.OK);
+        return new ResponseEntity<User>(userService.loginUser(loginAttempt), OK);
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
