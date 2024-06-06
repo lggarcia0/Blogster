@@ -1,12 +1,14 @@
 package com.revature.controllers;
 
+import com.revature.exceptions.InvalidBlogException;
+import com.revature.exceptions.InvalidUserException;
+import com.revature.models.Blog;
 import com.revature.services.BlogPostService;
 import com.revature.services.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("blog")
@@ -21,5 +23,28 @@ public class BlogController {
     public BlogController(BlogService blogService, BlogPostService blogPostService) {
             this.blogService = blogService;
             this.blogPostService = blogPostService;
+    }
+
+    // Add endpoints here
+    @PostMapping("{userId}")
+    public ResponseEntity<?> createBlog(@RequestBody Blog incomingBlog, @RequestParam int userId) {
+        try {
+            Blog createdBlog = blogService.createBlog(incomingBlog, userId);
+            return ResponseEntity.status(201).body(createdBlog);
+        } catch (InvalidBlogException | InvalidUserException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    // Add exception handlers here
+    @ExceptionHandler(InvalidBlogException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public @ResponseBody String handleInvalidBlogException(InvalidBlogException e) {
+        return e.getMessage();
+    }
+    @ExceptionHandler(InvalidUserException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public @ResponseBody String handleInvalidUserException(InvalidUserException e) {
+        return e.getMessage();
     }
 }

@@ -2,16 +2,14 @@ package com.revature.controllers;
 
 import com.revature.exceptions.InvalidLoginException;
 import com.revature.exceptions.UserAlreadyExistsException;
+import com.revature.exceptions.AccountCreationException;
 import com.revature.models.User;
 import com.revature.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.revature.exceptions.AccountCreationException;
 import org.springframework.http.HttpStatus;
-
 import static org.springframework.http.HttpStatus.OK;
-
 
 @RestController
 @RequestMapping("users")
@@ -26,15 +24,16 @@ public class UserController {
     }
 
     // User can update password and/or email
-//    @PostMapping("/{userId}/update")
-//    public ResponseEntity<?> updateUser(@RequestBody User modifiedUser, @PathVariable int userId) {
-//        try {
-//            userService.updateUser(modifiedUser, userId);
-//            return ResponseEntity.status(200).body("User Successfully Updated");
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+
+    @PostMapping("/{userId}/update")
+    public ResponseEntity<?> updateUser(@RequestBody User modifiedUser, @PathVariable int userId) {
+        try {
+            userService.updateUser(modifiedUser, userId);
+            return ResponseEntity.status(200).body("User Successfully Updated");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
   
     @PostMapping
     public ResponseEntity<User> registerNewUserHandler(@RequestBody User newUser) {
@@ -51,7 +50,7 @@ public class UserController {
     public ResponseEntity<User> loginHandler(@RequestBody User loginAttempt) {
         return new ResponseEntity<User>(userService.loginUser(loginAttempt), OK);
     }
-
+  
     @ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public @ResponseBody String handleUserAlreadyExists(UserAlreadyExistsException e) {
