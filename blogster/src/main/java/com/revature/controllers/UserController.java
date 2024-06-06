@@ -32,6 +32,7 @@ public class UserController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
   
     @PostMapping
     public ResponseEntity<User> registerNewUserHandler(@RequestBody User newUser) {

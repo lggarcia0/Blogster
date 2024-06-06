@@ -22,10 +22,10 @@ public class Blog {
     private int blogId;
 
     @Column(unique = true, nullable = false)
-    private String blogName;
+    private String name;
 
     @Column(columnDefinition = "TEXT")
-    private String blogDescription;
+    private String description;
 
     @Column
     private Date timeCreated;
