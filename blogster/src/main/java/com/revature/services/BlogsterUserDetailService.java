@@ -36,8 +36,8 @@ public class BlogsterUserDetailService implements UserDetailsService {
         if(blogsterUser.getRole() == null){
             return new String[] {"USER"};
         } else {
-            return (String[]) Arrays.stream(blogsterUser.getRole().split(","))
-                    .map(String::trim).toArray();
+            return Arrays.stream(blogsterUser.getRole().split(","))
+                    .map(String::trim).toArray(String[]::new);
         }
     }
 }
